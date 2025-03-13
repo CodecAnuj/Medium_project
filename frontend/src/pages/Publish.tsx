@@ -63,14 +63,14 @@ function TextEditor({
   return (
     <div className="mt-2">
       <div className="w-full mb-4 ">
-        <div className="flex items-center justify-between border">
+        <div className="flex items-center justify-between border border-slate-200 rounded-md">
           <div className="my-2 bg-white rounded-b-lg w-full">
             <label className="sr-only">Publish post</label>
             <textarea
               onChange={onChange}
               id="editor"
               rows={8}
-              className="focus:outline-none focus:ring-0 block w-full px-0 text-sm text-gray-800 bg-white border-0  pl-2"
+              className="focus:outline-none focus:ring-0 block w-full px-0 text-sm text-gray-800 bg-white border-0 border-slate-200 pl-2"
               placeholder="Write an article..."
               required
             />

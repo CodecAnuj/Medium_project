@@ -95,7 +95,6 @@ blogRouter.put("/", async (c) => {
   }
 });
 
-// Todo: add pagination
 // Get all blogs
 blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
