@@ -8,7 +8,7 @@ export interface Blog {
   id: number;
   author: {
     name: string;
-  }
+  };
 }
 
 export const useBlog = ({ id }: { id: string }) => {

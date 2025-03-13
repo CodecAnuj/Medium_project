@@ -13,18 +13,19 @@ export const userRouter = new Hono<{
 
 // signup endpoint
 userRouter.post("/signup", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
   const body = await c.req.json();
   const { success } = signupInput.safeParse(body);
   if (!success) {
     c.status(411);
     return c.json({
-      message: "inputs not correct",
+      message: "Invalid input",
     });
   }
 
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
 
   try {
     const user = await prisma.user.create({
@@ -36,8 +37,8 @@ userRouter.post("/signup", async (c) => {
     });
 
     const token = await sign({ id: user.id }, c.env.JWT_SECRET);
-
     return c.text(token);
+
   } catch (e) {
     c.status(403);
     return c.json({ error: "error while sign up" });
@@ -46,6 +47,10 @@ userRouter.post("/signup", async (c) => {
 
 // signin endpoint
 userRouter.post("/signin", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
   const body = await c.req.json();
   const { success } = signinInput.safeParse(body);
   if (!success) {
@@ -54,23 +59,22 @@ userRouter.post("/signin", async (c) => {
       message: "inputs not correct",
     });
   }
-
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
-
-  const user = await prisma.user.findUnique({
-    where: {
-      username: body.username,
-      password: body.password,
-    },
-  });
-
-  if (!user) {
-    c.status(403);
-    return c.json({ error: "user not found" });
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: body.username,
+        password: body.password,
+      },
+    });
+  
+    if (!user) {
+      c.status(403);
+      return c.json({ error: "User does not exist" });
+    }
+  
+    const token = await sign({ id: user.id }, c.env.JWT_SECRET);
+    return c.text(token);
+  } catch (e) {
+    return c.status(403);
   }
-
-  const token = await sign({ id: user.id }, c.env.JWT_SECRET);
-  return c.text(token);
 });

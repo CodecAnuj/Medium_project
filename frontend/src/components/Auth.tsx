@@ -3,6 +3,7 @@ import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../config";
+
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
   const [postInputs, setPostInput] = useState<SignupInput>({
@@ -21,7 +22,8 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       localStorage.setItem("token", jwt);
       navigate("/blogs");
     } catch (e) {
-      alert("error while signup");
+      alert("Error while signing up");
+      // alert the user here that the request failed
     }
   }
 
@@ -30,7 +32,11 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       <div className="flex justify-center">
         <div>
           <div className="px-10">
-            <div className="text-3xl font-extrabold">Create an account</div>
+            <div className="text-3xl font-extrabold">
+              {type === "signin"
+                ? "Sign In to your account"
+                : "Create your account"}
+            </div>
             <div className="text-slate-500">
               {type === "signin"
                 ? "Don't have an account?"
@@ -43,11 +49,12 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               </Link>
             </div>
           </div>
-          <div className="pt-8">
+          
+          <div className="space-y-4">
             {type === "signup" ? (
               <LabelledInput
                 label="Name"
-                placeholder="Anuj Tiwari"
+                placeholder="Enter Your Username"
                 onChange={(e) => {
                   setPostInput({
                     ...postInputs, // spread out the existing object.
@@ -57,9 +64,9 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               />
             ) : null}
             <LabelledInput
-              label="Username"
+              label="Email"
               type={"email"}
-              placeholder="anuj@gmail.com"
+              placeholder="m@emaple.com"
               onChange={(e) => {
                 setPostInput({
                   ...postInputs,
@@ -68,9 +75,9 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               }}
             />
             <LabelledInput
-              label="password"
+              label="Password"
               type={"password"}
-              placeholder="Anuj123"
+              placeholder=""
               onChange={(e) => {
                 setPostInput({
                   ...postInputs,
