@@ -49,7 +49,7 @@ export function Avatar({
   size = "small",
 }: {
   name: string;
-  size: "small" | "big";
+  size?: "small" | "big";
 }) {
   return (
     <div
@@ -60,7 +60,7 @@ export function Avatar({
       <span
         className={`${
           size === "small" ? "text-xs" : "text-md"
-        } font-extralight text-gray-600 dark:text-gray-300`}
+        } font-extralight text-white dark:text-gray-300`}
       >
         {name[0]}
       </span>
